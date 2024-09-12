@@ -11,7 +11,7 @@ import Notification from './Notification';
 import MobileSection from './MobileSection';
 
 // project import
-import { GithubOutlined } from '@ant-design/icons';
+import { LinkedinOutlined } from '@ant-design/icons';
 
 // ==============================|| HEADER - CONTENT ||============================== //
 
@@ -24,19 +24,19 @@ export default function HeaderContent() {
       {downLG && <Box sx={{ width: '100%', ml: 1 }} />}
       <IconButton
         component={Link}
-        href="https://github.com/codedthemes/mantis-free-react-admin-template"
+        href="https://www.linkedin.com/in/arumuga-kailash-1783111b5/"
         target="_blank"
         disableRipple
         color="secondary"
         title="Download Free Version"
         sx={{ color: 'text.primary', bgcolor: 'grey.100' }}
       >
-        <GithubOutlined />
+        <LinkedinOutlined />
       </IconButton>
 
       <Notification />
       {!downLG && <Profile />}
-      {downLG && <MobileSection />}
+      {downLG && <MobileSection />} 
     </>
   );
 }

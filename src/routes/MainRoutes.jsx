@@ -12,6 +12,10 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
 
+// newly added
+const MockServer = Loadable(lazy(() => import('pages/api-tools/mock-server')));
+const ProjectForm = Loadable(lazy(() => import('pages/api-tools/project/form')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -46,6 +50,15 @@ const MainRoutes = {
     {
       path: 'typography',
       element: <Typography />
+    },
+    // newly added below
+    {
+      path: 'mock-server',
+      element: <MockServer />
+    },
+    {
+      path: 'project-create',
+      element: <ProjectForm />
     }
   ]
 };
