@@ -6,10 +6,13 @@ import Stack from '@mui/material/Stack';
 import Google from 'assets/images/icons/google.svg';
 import Twitter from 'assets/images/icons/twitter.svg';
 import Facebook from 'assets/images/icons/facebook.svg';
+import { useOutletContext } from 'react-router-dom';
 
 // ==============================|| FIREBASE - SOCIAL BUTTON ||============================== //
 
 export default function FirebaseSocial() {
+  const { showSnackbar } = useOutletContext();
+
   const downSM = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   // @ts-ignore
@@ -37,11 +40,12 @@ export default function FirebaseSocial() {
         color="secondary"
         fullWidth={!downSM}
         startIcon={<img src={Google} alt="Google" />}
-        onClick={googleHandler}
+        onClick={() => showSnackbar('This feature will be available soon in the beta version. You are currently using the alpha version.', 'info')}
+        // onClick={googleHandler}
       >
         {!downSM && 'Google'}
       </Button>
-      <Button
+      {/* <Button
         variant="outlined"
         color="secondary"
         fullWidth={!downSM}
@@ -58,7 +62,7 @@ export default function FirebaseSocial() {
         onClick={facebookHandler}
       >
         {!downSM && 'Facebook'}
-      </Button>
+      </Button> */}
     </Stack>
   );
 }

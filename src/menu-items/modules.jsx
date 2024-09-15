@@ -19,7 +19,7 @@ export const mock = {
       type: 'item',
       url: '/mock-server',
       icon: icons.DashboardOutlined,
-      breadcrumbs: false
+      breadcrumbs: true
     }
   ]
 };
@@ -30,12 +30,12 @@ export const project = {
   type: 'group',
   children: [
     {
-      id: 'project-create',
-      title: 'Project Create',
+      id: 'project-list',
+      title: 'Projects',
       type: 'item',
-      url: '/project-create',
+      url: '/project-list',
       icon: icons.DashboardOutlined,
-      breadcrumbs: false
+      breadcrumbs: true
     }
   ]
 };

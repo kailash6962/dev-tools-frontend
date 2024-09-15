@@ -15,6 +15,7 @@ const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')))
 // newly added
 const MockServer = Loadable(lazy(() => import('pages/api-tools/mock-server')));
 const ProjectForm = Loadable(lazy(() => import('pages/api-tools/project/form')));
+const ProjectList = Loadable(lazy(() => import('pages/api-tools/project/list')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -22,10 +23,10 @@ const MainRoutes = {
   path: '/',
   element: <Dashboard />,
   children: [
-    {
-      path: '/',
-      element: <DashboardDefault />
-    },
+    // {
+    //   path: '/',
+    //   element: <DashboardDefault />
+    // },
     {
       path: 'color',
       element: <Color />
@@ -55,6 +56,10 @@ const MainRoutes = {
     {
       path: 'mock-server',
       element: <MockServer />
+    },
+    {
+      path: 'project-list',
+      element: <ProjectList />
     },
     {
       path: 'project-create',

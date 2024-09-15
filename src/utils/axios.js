@@ -10,7 +10,9 @@ axiosServices.interceptors.request.use(
   async (config) => {
     const accessToken = localStorage.getItem('serviceToken');
     if (accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`;
+      config.headers['authorization'] = accessToken;
+    } else {
+      window.location.pathname = '/login';
     }
     return config;
   },
@@ -20,7 +22,7 @@ axiosServices.interceptors.request.use(
 );
 
 axiosServices.interceptors.response.use(
-  (response) => {console.log(response)},
+  (response) => {console.log(response); return response;},
   (error) => {
     console.log("🚀 ~ error:", error)
     if (error.response.status === 401 && !window.location.href.includes('/login')) {
@@ -40,10 +42,10 @@ export const fetcher = async (args) => {
   return res.data;
 };
 
-export const fetcherPost = async (args) => {
-  const [url, config] = Array.isArray(args) ? args : [args];
+export const fetcherPost = async (slug,data) => {
 
-  const res = await axiosServices.post(api_url, { ...config });
+  const res = await axiosServices.post(api_url+slug, data);
+  console.log("📢[:48]: res: ", res);
 
   return res.data;
 };

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -28,11 +28,17 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 import FirebaseSocial from './FirebaseSocial';
+import axios from 'axios';
+import { useAuthActions } from 'auth/handler';
 
 // ============================|| JWT - LOGIN ||============================ //
 
-export default function AuthLogin({ isDemo = false }) {
+export default function AuthLogin() {
+
+  const navigate = useNavigate();
+
   const [checked, setChecked] = React.useState(false);
+  const { handleLogin } = useAuthActions();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
@@ -43,18 +49,42 @@ export default function AuthLogin({ isDemo = false }) {
     event.preventDefault();
   };
 
+  const handleFormSubmit = async (values) => {
+    try{
+
+      let response = await axios.post(import.meta.env.VITE_APP_API_URL+'login',values)
+      if(response.data.status=='success')
+      {
+        handleLogin(response.data.data);
+        navigate('/project-list');
+      }
+    } catch (e){
+      if(e.response.data.data.errors && e.response.data.data.errors.otp){
+        console.log("📢[:77]: e.response.data.data.errors.otp: ", e.response.data.data.errors.otp);
+        setinvalidotp(e.response.data.data.errors.otp[0]);
+      }
+      if(e.response.data.data.error){
+        console.log("📢[:77]: e.response.data.data.errors.otp: ", e.response.data.data.error);
+        setinvalidotp(e.response.data.data.error);
+      }
+      if(e.response.data.code="otpnotverified"){
+        navigate('/otpverify', { state: { email: values.email } });
+      }
+    }
+};
+
   return (
     <>
       <Formik
         initialValues={{
           email: '',
           password: '',
-          submit: null
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
+        onSubmit={handleFormSubmit}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>

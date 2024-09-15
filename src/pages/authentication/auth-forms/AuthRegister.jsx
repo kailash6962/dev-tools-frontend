@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink , useNavigate} from 'react-router-dom';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -27,10 +27,18 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 import EyeOutlined from '@ant-design/icons/EyeOutlined';
 import EyeInvisibleOutlined from '@ant-design/icons/EyeInvisibleOutlined';
 
+import axios from 'axios';
+
+// const api_url = import.meta.env.VITE_APP_API_URL;
+
 // ============================|| JWT - REGISTER ||============================ //
 
 export default function AuthRegister() {
+
+  const navigate = useNavigate();
+
   const [level, setLevel] = useState();
+  const [pageerror, setpageerror] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -38,6 +46,21 @@ export default function AuthRegister() {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handleFormSubmit = async (values) => {
+    try{
+      let response = await axios.post(import.meta.env.VITE_APP_API_URL+'register',values)
+      if(response.data.status=="success"){
+        navigate('/otpverify', { state: { email: values.email } });
+      }
+    }catch (e){
+      console.log("📢[:77]: e.response.data.data.errors.otp: ", e.response);
+
+      if(e.response.data.data.error){
+        setpageerror(e.response.data.data.error);
+      }
+    }
   };
 
   const changePassword = (value) => {
@@ -53,63 +76,64 @@ export default function AuthRegister() {
     <>
       <Formik
         initialValues={{
-          firstname: '',
-          lastname: '',
+          first_name: '',
+          last_name: '',
           email: '',
           company: '',
+          designation: '',
           password: '',
-          submit: null
         }}
         validationSchema={Yup.object().shape({
-          firstname: Yup.string().max(255).required('First Name is required'),
-          lastname: Yup.string().max(255).required('Last Name is required'),
+          first_name: Yup.string().max(255).required('First Name is required'),
+          last_name: Yup.string().max(255).required('Last Name is required'),
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
+        onSubmit={handleFormSubmit}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="firstname-signup">First Name*</InputLabel>
+                  <InputLabel htmlFor="first_name-signup">First Name*</InputLabel>
                   <OutlinedInput
-                    id="firstname-login"
-                    type="firstname"
-                    value={values.firstname}
-                    name="firstname"
+                    id="first_name-login"
+                    type="first_name"
+                    value={values.first_name}
+                    name="first_name"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="John"
                     fullWidth
-                    error={Boolean(touched.firstname && errors.firstname)}
+                    error={Boolean(touched.first_name && errors.first_name)}
                   />
                 </Stack>
-                {touched.firstname && errors.firstname && (
-                  <FormHelperText error id="helper-text-firstname-signup">
-                    {errors.firstname}
+                {touched.first_name && errors.first_name && (
+                  <FormHelperText error id="helper-text-first_name-signup">
+                    {errors.first_name}
                   </FormHelperText>
                 )}
               </Grid>
               <Grid item xs={12} md={6}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="lastname-signup">Last Name*</InputLabel>
+                  <InputLabel htmlFor="last_name-signup">Last Name*</InputLabel>
                   <OutlinedInput
                     fullWidth
-                    error={Boolean(touched.lastname && errors.lastname)}
-                    id="lastname-signup"
-                    type="lastname"
-                    value={values.lastname}
-                    name="lastname"
+                    error={Boolean(touched.last_name && errors.last_name)}
+                    id="last_name-signup"
+                    type="last_name"
+                    value={values.last_name}
+                    name="last_name"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="Doe"
                     inputProps={{}}
                   />
                 </Stack>
-                {touched.lastname && errors.lastname && (
-                  <FormHelperText error id="helper-text-lastname-signup">
-                    {errors.lastname}
+                {touched.last_name && errors.last_name && (
+                  <FormHelperText error id="helper-text-last_name-signup">
+                    {errors.last_name}
                   </FormHelperText>
                 )}
               </Grid>
@@ -125,6 +149,27 @@ export default function AuthRegister() {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="Demo Inc."
+                    inputProps={{}}
+                  />
+                </Stack>
+                {touched.company && errors.company && (
+                  <FormHelperText error id="helper-text-company-signup">
+                    {errors.company}
+                  </FormHelperText>
+                )}
+              </Grid>
+              <Grid item xs={12}>
+                <Stack spacing={1}>
+                  <InputLabel htmlFor="designation-signup">Designation</InputLabel>
+                  <OutlinedInput
+                    fullWidth
+                    error={Boolean(touched.designation && errors.designation)}
+                    id="designation-signup"
+                    value={values.designation}
+                    name="designation"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    placeholder="Software Engineer."
                     inputProps={{}}
                   />
                 </Stack>
@@ -207,7 +252,12 @@ export default function AuthRegister() {
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body2">
+              {pageerror && (
+                <Typography sx={{ mb: 2 }} color="error" variant="body1">
+                  {pageerror}
+                </Typography>
+              )}
+                <Typography variant="body1">
                   By Signing up, you agree to our &nbsp;
                   <Link variant="subtitle2" component={RouterLink} to="#">
                     Terms of Service

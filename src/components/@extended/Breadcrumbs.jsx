@@ -11,6 +11,7 @@ import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 import MainCard from 'components/MainCard';
 
 export default function Breadcrumbs({ navigation, title, ...others }) {
+  console.log("🚀 ~ Breadcrumbs ~ navigation:", navigation);
   const location = useLocation();
   const [main, setMain] = useState();
   const [item, setItem] = useState();
@@ -70,6 +71,8 @@ export default function Breadcrumbs({ navigation, title, ...others }) {
     );
 
     // main
+    console.log("🚀 ~ Breadcrumbs ~ item:", item)
+
     if (item.breadcrumbs !== false) {
       breadcrumbContent = (
         <MainCard border={false} sx={{ mb: 3, bgcolor: 'transparent' }} {...others} content={false}>

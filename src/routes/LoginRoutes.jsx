@@ -7,6 +7,7 @@ import MinimalLayout from 'layout/MinimalLayout';
 // render - login
 const AuthLogin = Loadable(lazy(() => import('pages/authentication/login')));
 const AuthRegister = Loadable(lazy(() => import('pages/authentication/register')));
+const OtpVerify = Loadable(lazy(() => import('pages/authentication/otpverify')));
 
 // ==============================|| AUTH ROUTING ||============================== //
 
@@ -15,12 +16,20 @@ const LoginRoutes = {
   element: <MinimalLayout />,
   children: [
     {
+      path: '/',
+      element: <AuthLogin />
+    },
+    {
       path: '/login',
       element: <AuthLogin />
     },
     {
       path: '/register',
       element: <AuthRegister />
+    },
+    {
+      path: '/otpverify',
+      element: <OtpVerify />
     }
   ]
 };

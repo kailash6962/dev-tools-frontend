@@ -11,10 +11,10 @@ const menuItems = {
   items: [
     mock,
     project,
-    // dashboard, 
-    // pages, 
-    // utilities, 
-    // support
+    dashboard, 
+    pages, 
+    utilities, 
+    support
   ]
 };
 
