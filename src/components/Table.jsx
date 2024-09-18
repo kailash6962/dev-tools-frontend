@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import dayjs from 'dayjs';
 
 // third-party
 import { NumericFormat } from 'react-number-format';
@@ -105,12 +106,14 @@ export default function DynamicTable({ headers, data, order = 'asc', orderBy = '
                       padding={header.disablePadding ? 'none' : 'normal'}
                     >
                       {/* Custom renderer for status if needed */}
-                      {header.id === 'status' ? (
+                      {header.id === 'is_active' ? (
                         <DynamicStatus status={row[header.id]} />
                       ) : header.id === 'totalAmount' ? (
                         <NumericFormat value={row[header.id]} displayType="text" thousandSeparator prefix="$" />
                       ) : header.id === 'tracking_no' ? (
                         <Link color="secondary">{row[header.id]}</Link>
+                      ) : header.date ? (
+                        dayjs(row[header.id]).format('D MMM YYYY')
                       ) : (
                         row[header.id]
                       )}

@@ -8,25 +8,9 @@ const icons = {
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
 
-export const mock = {
-  id: 'group-api',
-  title: 'API',
-  type: 'group',
-  children: [
-    {
-      id: 'mock-server',
-      title: 'Mock Server',
-      type: 'item',
-      url: '/mock-server',
-      icon: icons.DashboardOutlined,
-      breadcrumbs: true
-    }
-  ]
-};
-
 export const project = {
   id: 'project',
-  title: 'Project',
+  title: 'Master',
   type: 'group',
   children: [
     {
@@ -34,6 +18,22 @@ export const project = {
       title: 'Projects',
       type: 'item',
       url: '/project-list',
+      icon: icons.DashboardOutlined,
+      breadcrumbs: true
+    }
+  ]
+};
+
+export const mock = {
+  id: 'group-api',
+  title: 'API-Tools',
+  type: 'group',
+  children: [
+    {
+      id: 'mock-server',
+      title: 'Mock Server',
+      type: 'item',
+      url: '/mock-server',
       icon: icons.DashboardOutlined,
       breadcrumbs: true
     }

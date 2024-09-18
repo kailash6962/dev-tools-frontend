@@ -45,7 +45,6 @@ export const fetcher = async (args) => {
 export const fetcherPost = async (slug,data) => {
 
   const res = await axiosServices.post(api_url+slug, data);
-  console.log("📢[:48]: res: ", res);
 
   return res.data;
 };

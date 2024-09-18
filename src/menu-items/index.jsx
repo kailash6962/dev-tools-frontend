@@ -9,8 +9,8 @@ import support from './support';
 
 const menuItems = {
   items: [
-    mock,
     project,
+    mock,
     dashboard, 
     pages, 
     utilities, 

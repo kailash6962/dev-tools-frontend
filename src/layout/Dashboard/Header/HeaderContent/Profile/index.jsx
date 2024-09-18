@@ -54,8 +54,6 @@ export default function Profile() {
   const { handleLogout } = useAuthActions();
 
   const user = useSelector((state) => state.auth.user);
-  console.log("📢[:55]: user: ", user);
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const theme = useTheme();
 
@@ -132,9 +130,9 @@ export default function Profile() {
                         <Stack direction="row" spacing={1.25} alignItems="center">
                           <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
                           <Stack>
-                            <Typography variant="h6">John Doe</Typography>
+                            <Typography variant="h6">{user.first_name+" "+user.last_name}</Typography>
                             <Typography variant="body2" color="text.secondary">
-                              UI/UX Designer
+                              {user.designation}
                             </Typography>
                           </Stack>
                         </Stack>

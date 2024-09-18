@@ -1,46 +1,49 @@
 // project import
+import React from 'react';
 import MainCard from 'components/MainCard';
 import Table from 'components/Table';
 import {fetcherPost} from 'utils/axios';
 import Grid from '@mui/material/Grid';
+import PageTitle from 'components/common/PageTitle';
+import { useEffect, useState } from 'react';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-export default function Form() {
+export default function List() {
 
-  const actualData = [
-    { tracking_no: 12345, name: 'Product A', totalOrder: 100, status: 1, totalAmount: 5000 },
-    { tracking_no: 67890, name: 'Product B', totalOrder: 200, status: 0, totalAmount: 10000 },
-    // more data
+  const [rows,setrows] = useState([]);
+  const rowsheader = [
+    { id: 'id', label: 'ID' },
+    { id: 'project_name', label: 'Name' },
+    { id: 'stack', label: 'Stack' },
+    { id: 'description', label: 'Description' },
+    { id: 'is_active', label: 'Status' },
+    { id: 'created_at', label: 'Created at', align: 'left',date:true },
+    // { id: 'users', label: 'Users', align: 'left' },
   ];
-
-  const userHeaders = [
-    { id: 'id', label: 'User ID', align: 'left' },
-    { id: 'name', label: 'Name', align: 'left' },
-    { id: 'email', label: 'Email', align: 'left' },
-    { id: 'status', label: 'Status', align: 'left' },
-    { id: 'role', label: 'Role', align: 'right' }
-  ];
+  useEffect(() => {
+    fetcherPost('project-read',{})
+    .then(data => {
+      if(data.status=="success")
+        setrows(data.data.data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  },[]);
   
-  const userData = [
-    { id: 1, name: 'John Doe', email: 'john@example.com',status: 1, role: 'Admin' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com',status: 0, role: 'User' },
-    // more data
-  ];
-
-  fetcherPost('project-read',{})
-  .then(data => {
-    console.log('Data:', data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
 
   return (
-    <Grid item xs={12} md={7} lg={8}>
+    <>
+
+      <Grid item xs={12} md={7} lg={8}>
+
         <MainCard sx={{ mt: 2 }} content={false}>
-          <Table headers={userHeaders}  data={userData}/>
+        <PageTitle title="Project" link={"/project-create"}/>
+
+          <Table headers={rowsheader} data={rows}/>
         </MainCard>
       </Grid>
+  </>
   );
 }
