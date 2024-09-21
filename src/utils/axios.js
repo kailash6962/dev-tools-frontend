@@ -24,7 +24,6 @@ axiosServices.interceptors.request.use(
 axiosServices.interceptors.response.use(
   (response) => {console.log(response); return response;},
   (error) => {
-    console.log("🚀 ~ error:", error)
     if (error.response.status === 401 && !window.location.href.includes('/login')) {
       window.location.pathname = '/maintenance/500';
     }

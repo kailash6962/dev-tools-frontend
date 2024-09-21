@@ -64,6 +64,10 @@ const MainRoutes = {
     {
       path: 'project-create',
       element: <ProjectForm />
+    },
+    {
+      path: 'project-update',
+      element: <ProjectForm update={true} />
     }
   ]
 };

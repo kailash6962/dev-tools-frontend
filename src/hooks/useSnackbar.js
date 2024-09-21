@@ -6,8 +6,24 @@ const useSnackbar = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('info');
 
+  const errorsObjectToHTML = (errors,setkey) => {
+    let error = '';
+    for (const key in errors) {
+        error += `${(setkey)?key+' : ':''} <i>${errors[key]}</i><br> `;
+    }
+    return error;
+  }
+
   const showSnackbar = (message, severity = 'info') => {
+    if(severity=="error"){
+      if(typeof message=="object"){
+        setSnackbarMessage(errorsObjectToHTML(message.errors,true));
+      } else {
+        setSnackbarMessage(message);
+      }
+    }else{
     setSnackbarMessage(message);
+    }
     setSnackbarSeverity(severity);
     setSnackbarOpen(true);
   };

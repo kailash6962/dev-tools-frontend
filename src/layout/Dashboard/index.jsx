@@ -16,6 +16,8 @@ import Breadcrumbs from 'components/@extended/Breadcrumbs';
 import { handlerDrawerOpen, useGetMenuMaster } from 'api/menu';
 import { useSelector } from 'react-redux';
 
+import useSnackbar from 'hooks/useSnackbar';  // Import the custom hook
+import Snackbar from 'components/popup/Snackbar';  // Import the custom hook
 // ==============================|| MAIN LAYOUT ||============================== //
 
 export default function DashboardLayout() {
@@ -30,16 +32,32 @@ export default function DashboardLayout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [downXL]);
 
+  const { 
+    snackbarOpen, 
+    snackbarMessage, 
+    snackbarSeverity, 
+    showSnackbar, 
+    handleSnackbarClose 
+  } = useSnackbar();
+
   if (menuMasterLoading) return <Loader />;
 
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
+      <Snackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        severity={snackbarSeverity}
+        handleClose={handleSnackbarClose}
+      />
       <Header />
       <Drawer />
+      
       <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
+        
         <Toolbar />
         <Breadcrumbs navigation={navigation} title />
-        <Outlet />
+        <Outlet context={{ showSnackbar }} />
       </Box>
     </Box>
   );

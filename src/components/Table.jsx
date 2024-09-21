@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-// material-ui
+import { useEffect, useState } from 'react';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
@@ -11,14 +11,61 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import dayjs from 'dayjs';
-
+import { Menu, MenuItem, IconButton } from '@mui/material';
+import {MoreActionIcon} from "components/Icons";
 // third-party
 import { NumericFormat } from 'react-number-format';
+import { useNavigate,useOutletContext } from 'react-router-dom';
+import { fetcherPost } from 'utils/axios';
 
 // project import
 import Dot from 'components/@extended/Dot';
 
 // ==============================|| DYNAMIC TABLE - HEADER ||============================== //
+
+function ActionsMenu({row,pageProps,fetchFunction}) {
+  const { showSnackbar } = useOutletContext();
+  const navigate = useNavigate();
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+  const handleUpdateNav = (row) => {
+    setAnchorEl(null);
+    navigate("/project-update",{state:{id:row.id}});
+  };
+  const handleActiveToggle = (row) => {
+    setAnchorEl(null);
+    fetcherPost(pageProps.updateSlug,{id:row.id,is_active:row.is_active==1?0:1})
+    .then(data => {
+      if(data.status=="success")
+        fetchFunction();
+    })
+    .catch(e => {
+      showSnackbar(e.error,"error");
+    });
+  };
+  return (
+    <div>
+      <IconButton onClick={handleMenuClick}>
+        <MoreActionIcon />
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={()=>handleUpdateNav(row)}>Edit</MenuItem>
+        <MenuItem onClick={()=>handleActiveToggle(row)}>Set as {row.is_active?"In-":""}Active</MenuItem>
+      </Menu>
+    </div>
+  );
+}
+
 
 function DynamicTableHead({ headers, order, orderBy }) {
   return (
@@ -73,7 +120,7 @@ function DynamicStatus({ status }) {
 
 // ==============================|| DYNAMIC TABLE COMPONENT ||============================== //
 
-export default function DynamicTable({ headers, data, order = 'asc', orderBy = 'id' }) {
+export default function DynamicTable({ headers, data, order = 'asc', orderBy = 'id', pageProps, fetchFunction }) {
   return (
     <Box>
       <TableContainer
@@ -89,7 +136,7 @@ export default function DynamicTable({ headers, data, order = 'asc', orderBy = '
         <Table aria-labelledby="tableTitle">
           <DynamicTableHead headers={headers} order={order} orderBy={orderBy} />
           <TableBody>
-            {stableSort(data, getComparator(order, orderBy)).map((row, index) => {
+          {data.length > 0 ? (stableSort(data, getComparator(order, orderBy)).map((row, index) => {
 
               return (
                 <TableRow
@@ -101,11 +148,8 @@ export default function DynamicTable({ headers, data, order = 'asc', orderBy = '
                 >
                   {headers.map((header) => (
                     <TableCell
-                      key={header.id}
-                      align={header.align || 'left'}
-                      padding={header.disablePadding ? 'none' : 'normal'}
+                     
                     >
-                      {/* Custom renderer for status if needed */}
                       {header.id === 'is_active' ? (
                         <DynamicStatus status={row[header.id]} />
                       ) : header.id === 'totalAmount' ? (
@@ -114,6 +158,8 @@ export default function DynamicTable({ headers, data, order = 'asc', orderBy = '
                         <Link color="secondary">{row[header.id]}</Link>
                       ) : header.date ? (
                         dayjs(row[header.id]).format('D MMM YYYY')
+                      ) : header.id =="action" ? (
+                        <ActionsMenu row={row} pageProps={pageProps} fetchFunction={fetchFunction}/>
                       ) : (
                         row[header.id]
                       )}
@@ -121,7 +167,14 @@ export default function DynamicTable({ headers, data, order = 'asc', orderBy = '
                   ))}
                 </TableRow>
               );
-            })}
+            })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={headers.length} align="center">
+                  No data available
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
