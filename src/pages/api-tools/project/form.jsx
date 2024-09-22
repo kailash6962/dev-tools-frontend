@@ -19,12 +19,13 @@ import Stack from '@mui/material/Stack';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useOutletContext, useLocation } from 'react-router-dom';
+import { errorParser } from "utils/errors"
 // ==============================|| SAMPLE PAGE ||============================== //
 
 export default function Form({update}) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { showSnackbar } = useOutletContext();
+  const { showSnackbar, toast } = useOutletContext();
 
   const pageProps = {
     readSlug:'project-read',
@@ -33,15 +34,15 @@ export default function Form({update}) {
     title:"Project",
   }
   const [formvalues, setformvalues] = useState({
-    project_name: 'Sample Project',
+    project_name: '',
     stack: '',
     description: '',
   });
 
   const formSchema = Yup.object().shape({
-    project_name: Yup.string().max(255).required('First Name is required'),
-    stack: Yup.string().max(255).required('Last Name is required'),
-    description: Yup.string().max(255).required('Last Name is required'),
+    project_name: Yup.string().max(255).required('Project Name is required'),
+    stack: Yup.string().max(255).required('Stack is required'),
+    description: Yup.string().max(255).required('Description is required'),
   });
   const formFields = [
     { name: 'project_name', label: 'Project Name', type: 'text' },
@@ -50,17 +51,34 @@ export default function Form({update}) {
   ];
 
   const handleFormSubmit = async (values) => {
-    try{
-      let response = await fetcherPost(pageProps[update?"updateSlug":"formLink"],values)
+      let response = fetcherPost(pageProps[update?"updateSlug":"formLink"],values)
+      toast.promise(
+        response,
+        {
+          pending: 'Saving data...',
+          success: {
+            render({ data }) {
+              if(data.status=="success")
+              {
+                navigate('/project-list');
+                return data?.data?.message;
+              }
+            },
+          },
+          error: {
+            render({ data }) {
+              return errorParser(data);
+            },
+          }
+        }
+      );
       if(response.status=="success"){
         navigate('/project-list');
       }
-    }catch (e){
-      showSnackbar(e.error,"error");
-    }
   };
 
   function getData(){
+      
     if(!location.state)
       return showSnackbar("Error fetch Id from state","error");
     fetcherPost(pageProps.readSlug,{id:location.state.id})
