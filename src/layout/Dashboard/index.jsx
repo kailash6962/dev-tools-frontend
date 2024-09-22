@@ -18,6 +18,10 @@ import { useSelector } from 'react-redux';
 
 import useSnackbar from 'hooks/useSnackbar';  // Import the custom hook
 import Snackbar from 'components/popup/Snackbar';  // Import the custom hook
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // ==============================|| MAIN LAYOUT ||============================== //
 
 export default function DashboardLayout() {
@@ -39,11 +43,26 @@ export default function DashboardLayout() {
     showSnackbar, 
     handleSnackbarClose 
   } = useSnackbar();
+    
 
   if (menuMasterLoading) return <Loader />;
 
   return (
+    
     <Box sx={{ display: 'flex', width: '100%' }}>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        // transition: Bounce,
+        />
       <Snackbar
         open={snackbarOpen}
         message={snackbarMessage}
@@ -57,7 +76,7 @@ export default function DashboardLayout() {
         
         <Toolbar />
         <Breadcrumbs navigation={navigation} title />
-        <Outlet context={{ showSnackbar }} />
+        <Outlet context={{ showSnackbar, toast }} />
       </Box>
     </Box>
   );
