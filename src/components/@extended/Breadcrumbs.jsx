@@ -1,16 +1,20 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 // material-ui
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
+import Button from '@mui/material/Button';
+import { BackBtnIcon } from "components/Icons"
 
 // project import
 import MainCard from 'components/MainCard';
 
 export default function Breadcrumbs({ navigation, title, ...others }) {
+  const navigate = useNavigate();
+
   console.log("🚀 ~ Breadcrumbs ~ navigation:", navigation);
   const location = useLocation();
   const [main, setMain] = useState();
@@ -76,7 +80,12 @@ export default function Breadcrumbs({ navigation, title, ...others }) {
     if (item.breadcrumbs !== false) {
       breadcrumbContent = (
         <MainCard border={false} sx={{ mb: 1, bgcolor: 'transparent' }} {...others} content={false}>
-          <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start" spacing={1}>
+          <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+            <Grid item>
+            <Button startIcon={<BackBtnIcon />} onClick={()=>navigate(-1)} color="primary" aria-label="add to shopping cart">
+              Back
+            </Button>
+            </Grid>
             <Grid item>
               <MuiBreadcrumbs aria-label="breadcrumb">
                 <Typography component={Link} to="/" color="textSecondary" variant="h6" sx={{ textDecoration: 'none' }}>
