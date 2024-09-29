@@ -1,5 +1,8 @@
 // assets
 import { DashboardOutlined } from '@ant-design/icons';
+import { ProjectIcon,
+  MockServerIcon
+ } from 'components/Icons';
 
 // icons
 const icons = {
@@ -8,9 +11,9 @@ const icons = {
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
 
-export const project = {
-  id: 'project',
-  title: 'Master',
+export const mock = {
+  id: 'group-api',
+  title: 'API-Tools',
   type: 'group',
   children: [
     {
@@ -18,23 +21,15 @@ export const project = {
       title: 'Projects',
       type: 'item',
       url: '/project-list',
-      icon: icons.DashboardOutlined,
+      icon: ProjectIcon,
       breadcrumbs: true
-    }
-  ]
-};
-
-export const mock = {
-  id: 'group-api',
-  title: 'API-Tools',
-  type: 'group',
-  children: [
+    },
     {
       id: 'mock-server',
       title: 'Mock Server',
       type: 'item',
       url: '/mock-server',
-      icon: icons.DashboardOutlined,
+      icon: MockServerIcon,
       breadcrumbs: true
     }
   ]
