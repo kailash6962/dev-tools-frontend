@@ -28,7 +28,7 @@ export const mock = {
       id: 'mock-server',
       title: 'Mock Server',
       type: 'item',
-      url: '/mock-server',
+      url: '/mockserver-list',
       icon: MockServerIcon,
       breadcrumbs: true
     }

@@ -36,11 +36,11 @@ function ActionsMenu({row,pageProps,fetchFunction}) {
   };
   const handleUpdateNav = (row) => {
     setAnchorEl(null);
-    navigate("/project-update",{state:{id:row.id}});
+    navigate(pageProps.updateFormLink,{state:{id:row.id}});
   };
   const handleActiveToggle = (row) => {
     setAnchorEl(null);
-    fetcherPost(pageProps.updateSlug,{id:row.id,is_active:row.is_active==1?0:1})
+    fetcherPost(pageProps.updateSlug,{id:row.id,is_active:row.is_active==1?'0':'1'})
     .then(data => {
       if(data.status=="success")
         fetchFunction();

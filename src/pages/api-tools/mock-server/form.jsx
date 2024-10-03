@@ -4,17 +4,26 @@ import { useState, useEffect } from 'react';
 import MainCard from 'components/MainCard';
 import {fetcherPost} from 'utils/axios';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 import AnimateButton from 'components/@extended/AnimateButton';
+import ControlledAccordions from 'components/@extended/ControlledAccordions';
+import Input from 'components/@extended/InputElement';
+
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
 
-import Input from 'components/@extended/InputElement';
 
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useOutletContext, useLocation } from 'react-router-dom';
 import { errorParser } from "utils/errors";
+import { objectToSelectOptions } from "utils/common";
 // ==============================|| SAMPLE PAGE ||============================== //
 
 export default function Form({update}) {
@@ -22,26 +31,34 @@ export default function Form({update}) {
   const location = useLocation();
   const { showSnackbar, toast } = useOutletContext();
 
+  const [tabvalue, settabvalue] = useState('2');
+  const handleTabChange = (event, newValue) => {
+    console.log("📢[:35]: newValue: ", newValue);
+    settabvalue(newValue);
+  };
+
   const pageProps = {
-    readSlug:'project-read',
-    updateSlug:'project-update',
-    formLink:"/project-create",
-    title:"Project",
+    readSlug:'mockserver-read',
+    updateSlug:'mockserver-update',
+    formLink:"/mockserver-create",
+    updateFormLink:"/mockserver-update",
+    title:"Mock Server",
   }
+  const [projects, setprojects] = useState([]);
   const [formvalues, setformvalues] = useState({
-    project_name: '',
-    stack: '',
+    project_id: '',
+    name: '',
     description: '',
   });
 
   const formSchema = Yup.object().shape({
-    project_name: Yup.string().max(255).required('Project Name is required'),
-    stack: Yup.string().max(255).required('Stack is required'),
+    project_id: Yup.string().max(255).required('Project is required'),
+    name: Yup.string().max(255).required('Name is required'),
     description: Yup.string().max(255).required('Description is required'),
   });
   const formFields = [
-    { name: 'project_name', label: 'Project Name', type: 'text' },
-    { name: 'stack', label: 'Stack', type: 'text' },
+    { name: 'project_id', label: 'Project', type: 'select', options: projects },
+    { name: 'name', label: 'Server Name', type: 'text' },
     { name: 'description', label: 'Description', type: 'text' },
   ];
 
@@ -55,7 +72,7 @@ export default function Form({update}) {
             render({ data }) {
               if(data.status=="success")
               {
-                navigate('/project-list');
+                settabvalue('2');
                 return data?.data?.message;
               }
             },
@@ -67,13 +84,19 @@ export default function Form({update}) {
           }
         }
       );
-      if(response.status=="success"){
-        navigate('/project-list');
-      }
   };
 
+  function getRequiredData(){
+    fetcherPost("project-read",{})
+    .then(data => {
+      if(data.status=="success")
+        setprojects(objectToSelectOptions(data.data.data,'id','project_name'));
+    })
+    .catch(e => {
+      showSnackbar(e.error,"error");
+    });
+  }
   function getData(){
-      
     if(!location.state)
       return showSnackbar("Error fetch Id from state","error");
     fetcherPost(pageProps.readSlug,{id:location.state.id})
@@ -88,10 +111,17 @@ export default function Form({update}) {
   useEffect(() => {
     if(update)
     getData();
+    getRequiredData();
   },[]);
 
   return (
     <>
+    <TabContext value={tabvalue}>
+    <TabList sx={{ backgroundColor: '#fff' }} aria-label="lab API tabs example">
+            <Tab label="Mock Server Details" value="1" />
+            <Tab label="Request & Response" value="2" />
+          </TabList>
+          <TabPanel sx={{ p: 0 }} value="1">
     <MainCard title="Project Form">
       <Formik
         initialValues={formvalues}
@@ -103,18 +133,18 @@ export default function Form({update}) {
           <form noValidate onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             {formFields.map((field) => (
-              <Input 
-              field={field} 
-              touched={touched[field.name]} 
-              values={values[field.name]} 
-              handleBlur={handleBlur} 
-              handleChange={handleChange} 
-              errors={errors[field.name]}/>
+             <Input 
+             field={field} 
+             touched={touched[field.name]} 
+             values={values[field.name]} 
+             handleBlur={handleBlur} 
+             handleChange={handleChange} 
+             errors={errors[field.name]}/>
             ))}
-            <Grid item xs={6} md={2}>
+            <Grid item xs={12} md={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <AnimateButton>
                   <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
-                    Save
+                    Next
                   </Button>
                 </AnimateButton>
               </Grid>
@@ -123,6 +153,13 @@ export default function Form({update}) {
               )}
       </Formik>
     </MainCard>
+    </TabPanel>
+    <TabPanel sx={{ p: 0 }} value="2">
+    <MainCard title="Request Data">
+      <ControlledAccordions /> 
+    </MainCard>
+    </TabPanel>
+    </TabContext>
     </>
   );
 }
