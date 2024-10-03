@@ -16,11 +16,11 @@ export default function List() {
   const { showSnackbar } = useOutletContext();
 
   const pageProps = {
-    readSlug:'project-read',
-    updateSlug:'project-update',
-    formLink:"/project-create",
-    updateFormLink:"/project-update",
-    title:"Project",
+    readSlug:'mockserver-read',
+    updateSlug:'mockserver-update',
+    formLink:"/mockserver-create",
+    updateFormLink:"/mockserver-update",
+    title:"Mock Server",
   }
   function getData(){
     fetcherPost(pageProps.readSlug,{})
@@ -35,8 +35,8 @@ export default function List() {
   const [rows,setrows] = useState([]);
   const rowsheader = [
     { id: 'id', label: 'ID' },
-    { id: 'project_name', label: 'Name' },
-    { id: 'stack', label: 'Stack' },
+    { id: 'project_name', label: 'Project' },
+    { id: 'name', label: 'Name' },
     { id: 'description', label: 'Description' },
     { id: 'is_active', label: 'Status' },
     { id: 'created_at', label: 'Created at', align: 'left',date:true },
