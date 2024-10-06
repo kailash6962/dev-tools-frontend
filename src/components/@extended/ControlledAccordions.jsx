@@ -7,6 +7,8 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import {fetcherPost} from 'utils/axios';
+import { useOutletContext } from 'react-router-dom';
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -44,18 +46,54 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-export default function CustomizedAccordions() {
+export default function CustomizedAccordions({mockserverId,requestChange}) {
+  const { showSnackbar, toast } = useOutletContext();
   const [expanded, setExpanded] = React.useState('panel1');
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
 
+  const [mockserverReq, setmockserverReq] = React.useState([]);
+  const pageProps = {
+    readSlug:'mockserverrequest-read',
+  }
+  function getData(){
+    if(!mockserverId)
+      return showSnackbar("Error fetch Id","error");
+    fetcherPost(pageProps.readSlug,{mock_server_id:mockserverId})
+    .then(data => {
+      if(data.status=="success")
+        setmockserverReq(data.data.data);
+    })
+    .catch(e => {
+      showSnackbar(e.error,"error");
+    });
+  }
+  React.useEffect(() => {
+    getData();
+  },[requestChange]);
+
   return (
     <div>
-    <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+     {mockserverReq.length > 0 && mockserverReq.map((row, index) => (
+        <Accordion expanded={expanded === `panel${index + 1}`} onChange={handleChange(`panel${index + 1}`)} key={index}>
+          <AccordionSummary aria-controls={`panel${index + 1}d-content`} id={`panel${index + 1}d-header`}>
+            <Stack direction="row" spacing={1} alignItems="center"> {/* Align items vertically */}
+              <Chip size="medium" label={row.method} color="success" />
+              <Typography>{row.url_slug}</Typography> {/* Dynamically render the URL slug */}
+            </Stack>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              {row.description || "No description available"} {/* Display the description or fallback text */}
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+      ))}
+    {/* <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
       <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-        <Stack direction="row" spacing={1} alignItems="center"> {/* Align items vertically */}
+        <Stack direction="row" spacing={1} alignItems="center">
           <Chip size="medium" label="GET" color="success" />
           <Typography>/api/v1/login</Typography>
         </Stack>
@@ -69,7 +107,7 @@ export default function CustomizedAccordions() {
     </Accordion>
     <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
       <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-        <Stack direction="row" spacing={1} alignItems="center"> {/* Align items vertically */}
+        <Stack direction="row" spacing={1} alignItems="center">
           <Chip size="medium" label="POST" color="primary" />
           <Typography>/api/v1/login</Typography>
         </Stack>
@@ -83,7 +121,7 @@ export default function CustomizedAccordions() {
     </Accordion>
     <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
       <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-        <Stack direction="row" spacing={1} alignItems="center"> {/* Align items vertically */}
+        <Stack direction="row" spacing={1} alignItems="center">
           <Chip size="medium" label="DELETE" color="error" />
           <Typography>/api/v1/login</Typography>
         </Stack>
@@ -94,7 +132,7 @@ export default function CustomizedAccordions() {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.
         </Typography>
       </AccordionDetails>
-    </Accordion>
+    </Accordion> */}
 
     </div>
   );

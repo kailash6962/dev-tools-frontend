@@ -6,6 +6,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Stack from '@mui/material/Stack';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 // project import
 
 export default function Input({ field,touched,values,handleBlur,handleChange,errors }) {
@@ -25,8 +26,28 @@ export default function Input({ field,touched,values,handleBlur,handleChange,err
             onChange={handleChange}
             placeholder={field.placeholder || ""}
             inputProps={{}}
+            startAdornment={field.startAdornment || false}
+            endAdornment={field.endAdornment || false}
             />
         </Stack>
+        )}
+        {(field.type=='textarea')&&(
+            <Stack spacing={1}>
+            <InputLabel htmlFor={field.name}>{field.label}</InputLabel>
+            <OutlinedInput
+                rows={field.rowCount}// number of rows
+                multiline
+                error={Boolean(touched && errors)}
+                id={field.name}
+                type={field.text}
+                value={values}
+                name={field.name}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                placeholder={field.placeholder || ""}
+                inputProps={{}}
+            />
+            </Stack>
         )}
         {(field.type=='select')&&(
             <Stack spacing={1}>

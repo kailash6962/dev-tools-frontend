@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import AnimateButton from 'components/@extended/AnimateButton';
 import ControlledAccordions from 'components/@extended/ControlledAccordions';
 import Input from 'components/@extended/InputElement';
+import RequestForm from 'components/Forms/RequestForm';
 
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -31,10 +32,15 @@ export default function Form({update}) {
   const location = useLocation();
   const { showSnackbar, toast } = useOutletContext();
 
-  const [tabvalue, settabvalue] = useState('2');
+  const [tabvalue, settabvalue] = useState('1');
+  const [requestChange, setrequestChange] = useState(0);
+  const [mockserverId, setmockserverId] = useState(update?location.state.id:false);
   const handleTabChange = (event, newValue) => {
-    console.log("📢[:35]: newValue: ", newValue);
+    if(mockserverId)
     settabvalue(newValue);
+  };
+  const handleRequestChange = () => {
+    setrequestChange(requestChange+1);
   };
 
   const pageProps = {
@@ -73,6 +79,7 @@ export default function Form({update}) {
               if(data.status=="success")
               {
                 settabvalue('2');
+                setmockserverId(data?.data?.id);
                 return data?.data?.message;
               }
             },
@@ -117,7 +124,7 @@ export default function Form({update}) {
   return (
     <>
     <TabContext value={tabvalue}>
-    <TabList sx={{ backgroundColor: '#fff' }} aria-label="lab API tabs example">
+    <TabList onChange={handleTabChange} sx={{ backgroundColor: '#fff' }} aria-label="lab API tabs example">
             <Tab label="Mock Server Details" value="1" />
             <Tab label="Request & Response" value="2" />
           </TabList>
@@ -155,8 +162,8 @@ export default function Form({update}) {
     </MainCard>
     </TabPanel>
     <TabPanel sx={{ p: 0 }} value="2">
-    <MainCard title="Request Data">
-      <ControlledAccordions /> 
+    <MainCard title="Request Data" secondary={<RequestForm mockserverId={mockserverId} handleRequestChange={handleRequestChange}/>}>
+      <ControlledAccordions mockserverId={mockserverId} requestChange={requestChange}/> 
     </MainCard>
     </TabPanel>
     </TabContext>
