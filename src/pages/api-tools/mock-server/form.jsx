@@ -18,6 +18,7 @@ import TabPanel from '@mui/lab/TabPanel';
 
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
+import { EditIcon } from 'components/Icons';
 
 
 import * as Yup from 'yup';
@@ -162,8 +163,12 @@ export default function Form({update}) {
     </MainCard>
     </TabPanel>
     <TabPanel sx={{ p: 0 }} value="2">
-    <MainCard title="Request Data" secondary={<RequestForm mockserverId={mockserverId} handleRequestChange={handleRequestChange}/>}>
-      <ControlledAccordions mockserverId={mockserverId} requestChange={requestChange}/> 
+    <MainCard title="Request Data" secondary={<RequestForm btnContent={'Add Request'} mockserverId={mockserverId} handleRequestChange={handleRequestChange}/>}>
+      <ControlledAccordions 
+      mockserverId={mockserverId} 
+      requestChange={requestChange}
+      requestForm={<RequestForm btnContent={<EditIcon />} mockserverId={mockserverId} handleRequestChange={handleRequestChange}/>}
+      /> 
     </MainCard>
     </TabPanel>
     </TabContext>

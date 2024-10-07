@@ -4,6 +4,8 @@ import {
     SlackOutlined,
     CloudServerOutlined,
     CloseOutlined,
+    EditOutlined,
+    DownOutlined,
     LeftOutlined } from '@ant-design/icons';
 
 export const AddIcon = () => {
@@ -23,4 +25,10 @@ export const MockServerIcon = () => {
 }
 export const CloseIcon = () => {
     return (<CloseOutlined style={{ fontSize: '20px', color: '#08c' }}/>)
+}
+export const EditIcon = () => {
+    return (<EditOutlined style={{ fontSize: '20px', color: '#08c' }}/>)
+}
+export const DownIcon = () => {
+    return (<DownOutlined style={{ fontSize: '20px', color: '#08c' }}/>)
 }

@@ -17,7 +17,7 @@ import { useOutletContext } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import {CloseIcon} from 'components/Icons';
 
-export default function SwipeableTemporaryDrawer({mockserverId, handleRequestChange}) {
+export default function SwipeableTemporaryDrawer({btnContent,mockserverId, handleRequestChange,editId}) {
   const { showSnackbar, toast } = useOutletContext();
   const [state, setState] = useState({
     top: false,
@@ -25,8 +25,6 @@ export default function SwipeableTemporaryDrawer({mockserverId, handleRequestCha
     bottom: false,
     right: false,
   });
-
-  const update = false;
 
   const pageProps = {
     readSlug:'mockserverrequest-read',
@@ -37,8 +35,13 @@ export default function SwipeableTemporaryDrawer({mockserverId, handleRequestCha
     title:"Mock Server",
   }
 
+  const [update, setupdate] = useState(false);
   const [methods, setmethods] = useState([
     {key:'POST','value':'POST'},
+    {key:'GET','value':'GET'},
+    {key:'PUT','value':'PUT'},
+    {key:'DELETE','value':'DELETE'},
+    {key:'PATCH','value':'PATCH'},
   ]);
   const [responseTypes, setresponseTypes] = useState([
     {key:'plaintext','value':'Plain Text'},
@@ -56,6 +59,12 @@ export default function SwipeableTemporaryDrawer({mockserverId, handleRequestCha
     }
 
     setState({ ...state, [anchor]: open });
+    if(open && editId){
+      getData();
+      setupdate(true);
+    } else {
+      setupdate(false);
+    }
   };
 
   const [formvalues, setformvalues] = useState({
@@ -63,9 +72,9 @@ export default function SwipeableTemporaryDrawer({mockserverId, handleRequestCha
     description: '',
     method: '',
     url_slug: '',
-    response_type: '',
+    response_type: 'json',
     response_code: '',
-    delay: '5',
+    delay: '0',
     response: '',
   });
 
@@ -74,8 +83,7 @@ export default function SwipeableTemporaryDrawer({mockserverId, handleRequestCha
         .max(255, 'Name cannot exceed 255 characters')
         .required('Name is required'),
     description: Yup.string()
-        .nullable()
-        .required('Description is required'),
+        .nullable(),
     method: Yup.string()
         .oneOf(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], 'Invalid method')
         .required('Method is required'),
@@ -118,6 +126,7 @@ export default function SwipeableTemporaryDrawer({mockserverId, handleRequestCha
               if(data.status=="success")
               {
                 handleRequestChange();
+                if(!update)
                 resetForm();
                 return data?.data?.message;
               }
@@ -133,9 +142,9 @@ export default function SwipeableTemporaryDrawer({mockserverId, handleRequestCha
   };
 
   function getData(){
-    if(!location.state)
-      return showSnackbar("Error fetch Id from state","error");
-    fetcherPost(pageProps.readSlug,{id:location.state.id})
+    if(!editId)
+      return showSnackbar("Error fetch Id","error");
+    fetcherPost(pageProps.readSlug,{id:editId})
     .then(data => {
       if(data.status=="success")
         setformvalues(data.data.data[0]);
@@ -144,10 +153,10 @@ export default function SwipeableTemporaryDrawer({mockserverId, handleRequestCha
       showSnackbar(e.error,"error");
     });
   }
-  useEffect(() => {
-    if(update)
-    getData();
-  },[]);
+  // useEffect(() => {
+  //   if(editId)
+  //   getData();
+  // },[]);
 
   const list = (anchor) => (
     <Box
@@ -187,13 +196,13 @@ export default function SwipeableTemporaryDrawer({mockserverId, handleRequestCha
             ))}
             <Grid item xs={12} md={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <AnimateButton>
-                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="error">
+                  <Button disableElevation onClick={toggleDrawer(anchor, false)} fullWidth size="large" type="button" variant="contained" color="error">
                     Cancel
                   </Button>
                 </AnimateButton>
                 <AnimateButton>
                   <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
-                    Create
+                    {update?'Update':'Create'}
                   </Button>
                 </AnimateButton>
               </Grid>
@@ -207,19 +216,17 @@ export default function SwipeableTemporaryDrawer({mockserverId, handleRequestCha
 
   return (
     <div>
-      {['Add Request'].map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
+        <React.Fragment key={'right'}>
+          <Button onClick={toggleDrawer('right', true)}>{btnContent}</Button>
           <SwipeableDrawer
             anchor={'right'}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-            onOpen={toggleDrawer(anchor, true)}
+            open={state['right']}
+            onClose={toggleDrawer('right', false)}
+            onOpen={toggleDrawer('right', true)}
           >
-            {list(anchor)}
+            {list('right')}
           </SwipeableDrawer>
         </React.Fragment>
-      ))}
     </div>
   );
 }
