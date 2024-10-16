@@ -6,6 +6,7 @@ import {
     CloseOutlined,
     EditOutlined,
     DownOutlined,
+    DownloadOutlined,
     LeftOutlined } from '@ant-design/icons';
 
 export const AddIcon = () => {
@@ -31,4 +32,7 @@ export const EditIcon = () => {
 }
 export const DownIcon = () => {
     return (<DownOutlined style={{ fontSize: '20px', color: '#08c' }}/>)
+}
+export const DownloadIcon = () => {
+    return (<DownloadOutlined style={{ fontSize: '20px', color: '#08c' }}/>)
 }

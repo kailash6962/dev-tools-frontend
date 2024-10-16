@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate , useOutletContext} from 'react-router-dom';
 
 // material-ui
 import Button from '@mui/material/Button';
@@ -36,7 +36,7 @@ import { useAuthActions } from 'auth/handler';
 export default function AuthLogin() {
 
   const navigate = useNavigate();
-
+  const { showSnackbar, toast } = useOutletContext();
   const [checked, setChecked] = React.useState(false);
   const { handleLogin } = useAuthActions();
 
@@ -59,16 +59,17 @@ export default function AuthLogin() {
         navigate('/project-list');
       }
     } catch (e){
-      if(e.response.data.data.errors && e.response.data.data.errors.otp){
-        console.log("📢[:77]: e.response.data.data.errors.otp: ", e.response.data.data.errors.otp);
-        setinvalidotp(e.response.data.data.errors.otp[0]);
-      }
-      if(e.response.data.data.error){
-        console.log("📢[:77]: e.response.data.data.errors.otp: ", e.response.data.data.error);
-        setinvalidotp(e.response.data.data.error);
-      }
-      if(e.response.data.code="otpnotverified"){
+      // if(e.response.data.data.errors && e.response.data.data.errors.otp){
+      //   setinvalidotp(e.response.data.data.errors.otp[0]);
+      // }
+      // if(e.response.data.data.error){
+      //   setinvalidotp(e.response.data.data.error);
+      // }
+      if(e.response.data.code && e.response.data.code=="otpnotverified"){
         navigate('/otpverify', { state: { email: values.email } });
+      }
+      if(e.response.data.error.message){
+        showSnackbar(e.response.data.error.message,"error");
       }
     }
 };

@@ -12,8 +12,8 @@ const menuItems = {
     dashboard, 
     mock,
     // pages, 
-    utilities, 
-    support
+    // utilities, 
+    // support
   ]
 };
 

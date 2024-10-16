@@ -14,6 +14,7 @@ const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')))
 
 // newly added
 const MockServerForm = Loadable(lazy(() => import('pages/api-tools/mock-server/form')));
+const MockServerDetail = Loadable(lazy(() => import('pages/api-tools/mock-server/detail')));
 const MockServerList = Loadable(lazy(() => import('pages/api-tools/mock-server/list')));
 const ProjectForm = Loadable(lazy(() => import('pages/api-tools/project/form')));
 const ProjectList = Loadable(lazy(() => import('pages/api-tools/project/list')));
@@ -65,6 +66,10 @@ const MainRoutes = {
     {
       path: 'mockserver-update',
       element: <MockServerForm update={true} />
+    },
+    {
+      path: 'mockserver-detail',
+      element: <MockServerDetail update={true} />
     },
     {
       path: 'project-list',

@@ -80,6 +80,7 @@ export default function Form({update}) {
               if(data.status=="success")
               {
                 settabvalue('2');
+                if(!values.id)
                 setmockserverId(data?.data?.id);
                 return data?.data?.message;
               }
@@ -111,6 +112,7 @@ export default function Form({update}) {
     .then(data => {
       if(data.status=="success")
         setformvalues(data.data.data[0]);
+        console.log("📢[:114]: data.data.data[0]: ", data.data.data[0]);
     })
     .catch(e => {
       showSnackbar(e.error,"error");

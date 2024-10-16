@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import Link from '@mui/material/Link';
+import { Link as ReactLink } from "react-router-dom";
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -23,7 +24,7 @@ import Dot from 'components/@extended/Dot';
 
 // ==============================|| DYNAMIC TABLE - HEADER ||============================== //
 
-function ActionsMenu({row,pageProps,fetchFunction}) {
+function ActionsMenu({row,pageProps,fetchFunction,additionalMenu}) {
   const { showSnackbar } = useOutletContext();
   const navigate = useNavigate();
 
@@ -61,6 +62,9 @@ function ActionsMenu({row,pageProps,fetchFunction}) {
       >
         <MenuItem onClick={()=>handleUpdateNav(row)}>Edit</MenuItem>
         <MenuItem onClick={()=>handleActiveToggle(row)}>Set as {row.is_active?"In-":""}Active</MenuItem>
+        {additionalMenu && additionalMenu.map((i, j) => (
+          <MenuItem key={j} onClick={() => i.callback(row)}>{i.label}</MenuItem>
+        ))}
       </Menu>
     </div>
   );
@@ -120,7 +124,7 @@ function DynamicStatus({ status }) {
 
 // ==============================|| DYNAMIC TABLE COMPONENT ||============================== //
 
-export default function DynamicTable({ headers, data, order = 'asc', orderBy = 'id', pageProps, fetchFunction }) {
+export default function DynamicTable({ headers, data, order = 'asc', orderBy = 'id', pageProps, fetchFunction, additionalMenu = false }) {
   return (
     <Box>
       <TableContainer
@@ -158,8 +162,10 @@ export default function DynamicTable({ headers, data, order = 'asc', orderBy = '
                         <Link color="secondary">{row[header.id]}</Link>
                       ) : header.date ? (
                         dayjs(row[header.id]).format('D MMM YYYY')
+                      ) : header.link ? (
+                        <Link varient="body2" color="primary" component={ReactLink} to={`/${header.link}`} state={ {id: row.id} }>{row[header.id]}</Link>
                       ) : header.id =="action" ? (
-                        <ActionsMenu row={row} pageProps={pageProps} fetchFunction={fetchFunction}/>
+                        <ActionsMenu row={row} pageProps={pageProps} fetchFunction={fetchFunction} additionalMenu={additionalMenu}/>
                       ) : (
                         row[header.id]
                       )}

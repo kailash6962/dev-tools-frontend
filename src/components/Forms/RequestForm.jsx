@@ -44,8 +44,13 @@ export default function SwipeableTemporaryDrawer({btnContent,mockserverId, handl
     {key:'PATCH','value':'PATCH'},
   ]);
   const [responseTypes, setresponseTypes] = useState([
-    {key:'plaintext','value':'Plain Text'},
-    {key:'json','value':'JSON'},
+    {key: 'application/json', value: 'application/json'},
+    {key: 'application/xml', value: 'application/xml'},
+    {key: 'application/x-www-form-urlencoded', value: 'application/x-www-form-urlencoded'},
+    {key: 'multipart/form-data', value: 'multipart/form-data'},
+    {key: 'text/plain', value: 'text/plain'},
+    {key: 'text/html', value: 'text/html'},
+    {key: 'application/octet-stream', value: 'application/octet-stream'}
   ]);
 
   const toggleDrawer = (anchor, open) => (event) => {

@@ -15,7 +15,6 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useOutletContext, useLocation } from 'react-router-dom';
 import { errorParser } from "utils/errors";
-// ==============================|| SAMPLE PAGE ||============================== //
 
 export default function Form({update}) {
   const navigate = useNavigate();

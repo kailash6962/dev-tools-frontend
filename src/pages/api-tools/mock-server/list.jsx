@@ -8,8 +8,6 @@ import {fetcherPost} from 'utils/axios';
 import Grid from '@mui/material/Grid';
 import PageTitle from 'components/common/PageTitle';
 
-// ==============================|| SAMPLE PAGE ||============================== //
-
 export default function List() {
 
   const navigate = useNavigate();
@@ -35,8 +33,8 @@ export default function List() {
   const [rows,setrows] = useState([]);
   const rowsheader = [
     { id: 'id', label: 'ID' },
+    { id: 'name', label: 'Server Name', link:'mockserver-detail' },
     { id: 'project_name', label: 'Project' },
-    { id: 'name', label: 'Name' },
     { id: 'description', label: 'Description' },
     { id: 'is_active', label: 'Status' },
     { id: 'created_at', label: 'Created at', align: 'left',date:true },
@@ -46,12 +44,22 @@ export default function List() {
     getData();
   },[]);
 
+  const additionalMenu = [
+    {
+      label:"Download as Postman",callback:function(row){
+        console.log("Postman downloaded successfully");
+        window.location.href=`${import.meta.env.VITE_APP_API_URL}/download-postman-json/${row.server_code}`;
+        showSnackbar("Postman downloaded successfully","success");
+      },
+    }
+  ]
+
   return (
     <>
       <Grid item xs={12} md={7} lg={8}>
         <MainCard sx={{ mt: 2 }} content={false}>
         <PageTitle title={pageProps.title} link={pageProps.formLink}/>
-          <Table headers={rowsheader} data={rows} pageProps={pageProps} fetchFunction={getData}/>
+          <Table headers={rowsheader} data={rows} pageProps={pageProps} fetchFunction={getData} additionalMenu={additionalMenu} />
         </MainCard>
       </Grid>
   </>
