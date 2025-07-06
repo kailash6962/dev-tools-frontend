@@ -28,7 +28,7 @@ A modern frontend interface for developer utilities — built with React and Vit
 ---
 
 ## 📁 Folder Structure
-
+```
 dev-tools-frontend/
 ├── public/
 ├── src/
@@ -42,7 +42,7 @@ dev-tools-frontend/
 ├── index.html
 ├── package.json
 └── vite.config.js
-
+```
 
 ---
 
